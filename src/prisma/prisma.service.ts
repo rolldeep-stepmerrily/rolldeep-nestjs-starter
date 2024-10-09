@@ -8,7 +8,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     super({
       log:
         configService.getOrThrow<string>('NODE_ENV') === 'development'
-          ? ['query', 'info', 'warn', 'error']
+          ? ['info', 'warn', 'error']
           : ['warn', 'error'],
     });
   }
