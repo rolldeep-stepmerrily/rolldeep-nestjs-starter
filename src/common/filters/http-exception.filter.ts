@@ -1,19 +1,30 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { Response } from 'express';
 
+interface IErrorResponse {
+  message: string;
+  errorCode?: string;
+  [key: string]: any;
+}
+
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest();
+    const statusCode = exception.getStatus();
+    const exceptionResponse = exception.getResponse();
 
-    const status = exception.getStatus();
-    const error = exception.getResponse() as string | { message: string | string[] };
+    const error: IErrorResponse =
+      typeof exceptionResponse === 'string' ? { message: exceptionResponse } : (exceptionResponse as IErrorResponse);
 
-    if (typeof error === 'string') {
-      return response.status(status).json({ message: error });
-    }
-
-    return response.status(status).json({ message: error.message });
+    return response.status(statusCode).json({
+      statusCode,
+      errorCode: error.errorCode || 'UNDEFINED_ERROR_CODE',
+      message: error.message || 'UNDEFINED_ERROR_MESSAGE',
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    });
   }
 }
