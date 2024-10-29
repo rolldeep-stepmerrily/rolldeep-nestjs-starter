@@ -1,7 +1,8 @@
-import { Controller, Get, Inject, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
+import { CustomHttpException, GLOBAL_ERRORS } from './common/exceptions';
 
 @ApiExcludeController()
 @Controller()
@@ -11,7 +12,7 @@ export class AppController {
   @Get('version-log')
   async versionLog() {
     if (this.NODE_ENV !== 'development') {
-      throw new NotFoundException('Cannot GET /version-log');
+      throw new CustomHttpException(GLOBAL_ERRORS.VERSION_LOG_NOT_FOUND);
     }
 
     const filePath = join(__dirname, '..', 'swagger', 'swagger-version-log.md');
