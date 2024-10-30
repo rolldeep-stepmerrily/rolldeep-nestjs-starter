@@ -20,7 +20,10 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
-      "@exceptions": ["src/common/exceptions/index"]
+      "@decorators": ["src/common/decorators/index"],
+      "@entities": ["src/common/entities/index"],
+      "@exceptions": ["src/common/exceptions/index"],
+      "@pipes": ["src/common/pipes/index"]
     }
   }
 }
