@@ -2,5 +2,9 @@
   "singleQuote": true,
   "trailingComma": "all",
   "printWidth": 120,
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "arrowParens": "always",
+  "tabWidth": 2,
+  "bracketSpacing": true,
+  "semi": true
 }
