@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 
 interface IErrorResponse {
@@ -19,10 +19,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const error: IErrorResponse =
       typeof exceptionResponse === 'string' ? { message: exceptionResponse } : (exceptionResponse as IErrorResponse);
 
+    const isUnAuthorized = statusCode === HttpStatus.UNAUTHORIZED;
+    const isBadRequest = statusCode === HttpStatus.BAD_REQUEST;
+
+    let errorCode;
+
+    if (error.errorCode) {
+      errorCode = error.errorCode;
+    } else {
+      if (isUnAuthorized) {
+        errorCode = 'UNAUTHORIZED_KEY';
+      } else if (isBadRequest) {
+        errorCode = 'INVALID_REQUEST';
+      } else {
+        errorCode = 'UNDEFINED_ERROR_CODE';
+      }
+    }
+
+    const message = isUnAuthorized ? 'Unauthorized key' : error.message || 'UNDEFINED_ERROR_MESSAGE';
+
     return response.status(statusCode).json({
       statusCode,
-      errorCode: error.errorCode || 'UNDEFINED_ERROR_CODE',
-      message: error.message || 'UNDEFINED_ERROR_MESSAGE',
+      errorCode,
+      message,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
