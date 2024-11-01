@@ -1,7 +1,8 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ApiExcludeController } from '@nestjs/swagger';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
+
+import { Controller, Get, Inject } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 
 import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
 

@@ -1,11 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
 import Joi from 'joi';
 
-import { PrismaModule } from './prisma/prisma.module';
-import { HttpLoggerMiddleware } from './common/middlewares';
 import { AppController } from './app.controller';
 import { ConfigProviderModule } from './common/config-provider';
+import { HttpLoggerMiddleware } from './common/middlewares';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
