@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 
-import { CustomHttpException, GLOBAL_ERRORS } from '@exceptions';
+import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
 
 @Injectable()
 export class ParsePositiveIntPipe implements PipeTransform {

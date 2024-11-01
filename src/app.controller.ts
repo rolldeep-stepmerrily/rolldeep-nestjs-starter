@@ -3,7 +3,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-import { CustomHttpException, GLOBAL_ERRORS } from '@exceptions';
+import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
 
 @ApiExcludeController()
 @Controller()
