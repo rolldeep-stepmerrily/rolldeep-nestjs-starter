@@ -26,5 +26,5 @@ module.exports = {
       },
     ],
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', 'dist/**', 'node_modules/**', 'build/**'],
 };
