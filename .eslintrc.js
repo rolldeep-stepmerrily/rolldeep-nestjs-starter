@@ -27,4 +27,10 @@ module.exports = {
     ],
   },
   ignorePatterns: ['.eslintrc.js', 'dist/**', 'node_modules/**', 'build/**'],
+  overrides: [
+    {
+      files: ['**/*.strategy.ts', '**/*.controller.ts', '**/*.service.ts', '**/*.error.ts'],
+      rules: { '@typescript-eslint/explicit-function-return-type': ['error'] },
+    },
+  ],
 };
