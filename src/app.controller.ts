@@ -11,13 +11,13 @@ import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
 export class AppController {
   constructor(@Inject('NODE_ENV') private NODE_ENV: string) {}
 
-  @Get('version-log')
-  async versionLog() {
+  @Get('changelog')
+  async changelog() {
     if (this.NODE_ENV !== 'development') {
       throw new CustomHttpException(GLOBAL_ERRORS.VERSION_LOG_NOT_FOUND);
     }
 
-    const filePath = join(__dirname, '..', 'swagger', 'swagger-version-log.md');
+    const filePath = join(__dirname, '..', 'swagger', 'swagger-changelog.md');
     const content = await readFile(filePath, { encoding: 'utf-8' });
 
     return `

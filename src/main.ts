@@ -20,7 +20,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  const isProduction = configService.getOrThrow<string>('NODE_ENV') === 'production';
+  const nodeEnv = configService.getOrThrow<string>('NODE_ENV');
+  const isProduction = nodeEnv === 'production';
 
   app.useGlobalInterceptors(new TransformInterceptor());
 
@@ -34,6 +35,9 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  const port = configService.getOrThrow<number>('PORT');
+  const serverUrl = configService.getOrThrow<string>('SERVER_URL');
 
   if (isProduction) {
     app.use(helmet());
@@ -68,10 +72,47 @@ async function bootstrap() {
       customJs: '/swagger-dark.js',
       customCssUrl: '/swagger-dark.css',
     });
+
+    const countEndPoint = Object.values(document.paths).reduce((acc, cur) => {
+      return (acc += Object.keys(cur).length);
+    }, 0);
+
+    const uptime = process.uptime().toFixed(2);
+    const nodeVersion = process.version;
+    const memoryUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+    const projectVersion = JSON.parse(fs.readFileSync(join(__dirname, '..', 'package.json'), 'utf8')).version;
+
+    const uptimeMessage = `Uptime: ${uptime}s`;
+    const nodeVersionMessage = `Node.js Version: ${nodeVersion}`;
+    const environmentMessage = `Environment: ${nodeEnv}`;
+    const memoryUsageMessage = `Memory Usage: ${memoryUsage}MB`;
+    const projectVersionMessage = `Project Version: ${projectVersion}`;
+    const countEndPointMessage = `Current number of endpoints: ${countEndPoint}`;
+    const serverRunningMessage = `Server is running successfully at: ${serverUrl}:${port}`;
+
+    setTimeout(() => {
+      const style = '\x1b[1m\x1b[3m\x1b[44m\x1b[30m%s\x1b[0m';
+      const terminalWidth = process.stdout.columns;
+      const messages = [
+        uptimeMessage,
+        nodeVersionMessage,
+        environmentMessage,
+        memoryUsageMessage,
+        projectVersionMessage,
+        countEndPointMessage,
+        serverRunningMessage,
+      ];
+      const maxLength = Math.max(...messages.map((msg) => msg.length));
+      const leftPadding = Math.floor((terminalWidth - maxLength) / 2);
+      const separator = ' '.repeat(terminalWidth);
+
+      console.log(
+        style,
+        `${separator}\n${messages.map((msg) => `${' '.repeat(leftPadding)}${msg}`).join('\n')}\n${separator}`,
+      );
+    }, 1000);
   }
 
-  const PORT = configService.getOrThrow<number>('PORT');
-
-  await app.listen(PORT);
+  await app.listen(port);
 }
 bootstrap();

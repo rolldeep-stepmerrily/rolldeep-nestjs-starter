@@ -1741,6 +1741,18 @@
 .swagger-ui .info .title {
   display: none;
 }
+
 .swagger-ui .info {
   margin: 20px 0;
+}
+
+@font-face {
+  font-family: 'Pretendard-Light';
+  src: url('./Pretendard-Light.woff2');
+}
+
+html,
+body,
+.swagger-ui * {
+  font-family: 'Pretendard-Light' !important;
 }
