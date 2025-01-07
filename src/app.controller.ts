@@ -12,7 +12,7 @@ export class AppController {
   constructor(@Inject('NODE_ENV') private NODE_ENV: string) {}
 
   @Get('changelog')
-  async changelog() {
+  async changelog(): Promise<string> {
     if (this.NODE_ENV !== 'development') {
       throw new CustomHttpException(GLOBAL_ERRORS.VERSION_LOG_NOT_FOUND);
     }
