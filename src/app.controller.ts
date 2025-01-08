@@ -14,7 +14,7 @@ export class AppController {
   @Get('changelog')
   async changelog(): Promise<string> {
     if (this.NODE_ENV !== 'development') {
-      throw new CustomHttpException(GLOBAL_ERRORS.VERSION_LOG_NOT_FOUND);
+      throw new CustomHttpException(GLOBAL_ERRORS.CHANGELOG_NOT_FOUND);
     }
 
     const filePath = join(__dirname, '..', 'swagger', 'swagger-changelog.md');
