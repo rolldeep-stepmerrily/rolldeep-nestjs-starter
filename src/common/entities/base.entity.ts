@@ -3,16 +3,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsOptional } from 'class-validator';
 
 export class BaseEntity {
-  @ApiProperty({ description: '생성일자' })
+  @ApiProperty({ description: 'created at' })
   @IsDate()
   createdAt: Date;
 
-  @ApiProperty({ description: '수정일자' })
+  @ApiProperty({ description: 'updated at' })
   @IsOptional()
   @IsDate()
   updatedAt: Date | null;
 
-  @ApiProperty({ description: '삭제일자' })
+  @ApiProperty({ description: 'deleted at' })
   @IsOptional()
   @IsDate()
   deletedAt: Date | null;
