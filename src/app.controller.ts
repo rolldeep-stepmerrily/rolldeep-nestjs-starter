@@ -1,7 +1,8 @@
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiExcludeController } from '@nestjs/swagger';
 
 import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
@@ -9,11 +10,11 @@ import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
 @ApiExcludeController()
 @Controller()
 export class AppController {
-  constructor(@Inject('NODE_ENV') private NODE_ENV: string) {}
+  constructor(private readonly configService: ConfigService) {}
 
   @Get('changelog')
   async changelog(): Promise<string> {
-    if (this.NODE_ENV !== 'development') {
+    if (this.configService.getOrThrow('NODE_ENV') !== 'development') {
       throw new CustomHttpException(GLOBAL_ERRORS.CHANGELOG_NOT_FOUND);
     }
 

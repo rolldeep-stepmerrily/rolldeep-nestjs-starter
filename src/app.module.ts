@@ -3,8 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import Joi from 'joi';
 
-import { AppController } from './app.controller';
-import { ConfigProviderModule } from './common/config-provider';
+import { AppController } from './app.controller'; 
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -25,8 +24,7 @@ import { PrismaModule } from './prisma/prisma.module';
       envFilePath: '.env',
       validationOptions: { abortEarly: true },
     }),
-    PrismaModule,
-    ConfigProviderModule,
+    PrismaModule, 
   ],
   controllers: [AppController],
 })

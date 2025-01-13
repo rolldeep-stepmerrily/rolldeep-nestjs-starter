@@ -1,4 +1,5 @@
-import { Inject, Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { NextFunction, Request, Response } from 'express';
 
@@ -8,14 +9,14 @@ interface IRequest extends Request {
 
 @Injectable()
 export class HttpLoggerMiddleware implements NestMiddleware {
-  constructor(@Inject('NODE_ENV') private readonly NODE_ENV: string) {}
+  constructor(private readonly configService: ConfigService) {}
 
   private readonly logger = new Logger('HTTP');
 
   use(req: IRequest, res: Response, next: NextFunction) {
     const startTime = Date.now();
 
-    if (this.NODE_ENV === 'development') {
+    if (this.configService.getOrThrow('NODE_ENV') === 'development') {
       console.log(req.body);
     }
 
