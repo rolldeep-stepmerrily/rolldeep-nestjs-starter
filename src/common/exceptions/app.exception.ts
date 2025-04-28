@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-interface ICustomHttpExceptionProps {
+interface IAppExceptionProps {
   statusCode: HttpStatus;
   errorCode: string;
   message: string;
 }
 
-export class CustomHttpException extends HttpException {
-  constructor({ statusCode, errorCode, message }: ICustomHttpExceptionProps) {
+export class AppException extends HttpException {
+  constructor({ statusCode, errorCode, message }: IAppExceptionProps) {
     super({ statusCode, errorCode, message }, statusCode);
   }
 }

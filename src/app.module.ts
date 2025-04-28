@@ -5,7 +5,7 @@ import Joi from 'joi';
 
 import { AppController } from './app.controller';
 import { HttpLoggerMiddleware } from './common/middlewares';
-import { PrismaModule } from './prisma/prisma.module';
+import { PrismaModule } from './common/prisma';
 
 @Module({
   imports: [

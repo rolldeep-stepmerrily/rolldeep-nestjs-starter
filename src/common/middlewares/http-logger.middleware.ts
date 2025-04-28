@@ -26,11 +26,11 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       const userId = req.user?.id ? ` ${req.user?.id} ` : ' ';
       const contentLength = res.getHeader('content-length') || 0;
       const referrer = req.header('Referer') || req.header('Referrer');
-      const fommattedReferrer = referrer ? ` "${referrer}" ` : ' ';
+      const formattedReferrer = referrer ? ` "${referrer}" ` : ' ';
       const userAgent = req.header('user-agent');
       const responseTime = Date.now() - startTime;
 
-      const message = `[${userIpV4} | ${userIpV6}] -${userId}"${req.method} ${req.originalUrl} HTTP/${req.httpVersion}" ${res.statusCode} - ${contentLength}${fommattedReferrer}"${userAgent}" \x1b[33m+${responseTime}ms`;
+      const message = `[${userIpV4} | ${userIpV6}] -${userId}"${req.method} ${req.originalUrl} HTTP/${req.httpVersion}" ${res.statusCode} - ${contentLength}${formattedReferrer}"${userAgent}" \x1b[33m+${responseTime}ms`;
 
       if (res.statusCode >= 400) {
         this.logger.error(message);

@@ -1,2 +1,2 @@
-export { CustomHttpException } from './custom-http.exception';
+export { AppException } from './app.exception';
 export { GLOBAL_ERRORS } from './global.error';

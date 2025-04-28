@@ -5,7 +5,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiExcludeController } from '@nestjs/swagger';
 
-import { CustomHttpException, GLOBAL_ERRORS } from '@@exceptions';
+import { AppException, GLOBAL_ERRORS } from '@@exceptions';
 
 @ApiExcludeController()
 @Controller()
@@ -15,7 +15,7 @@ export class AppController {
   @Get('changelog')
   async changelog(): Promise<string> {
     if (this.configService.getOrThrow('NODE_ENV') !== 'development') {
-      throw new CustomHttpException(GLOBAL_ERRORS.CHANGELOG_NOT_FOUND);
+      throw new AppException(GLOBAL_ERRORS.CHANGELOG_NOT_FOUND);
     }
 
     const filePath = join(__dirname, '..', 'swagger', 'swagger-changelog.md');
