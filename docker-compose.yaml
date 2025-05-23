@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: local1234!
+      POSTGRES_DB: localDB
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+
+volumes:
+  postgres_data:
+
+networks:
+  postgres-network:
+    driver: bridge

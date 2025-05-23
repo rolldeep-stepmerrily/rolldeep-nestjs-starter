@@ -14,7 +14,7 @@ export class AppController {
 
   @Get('changelog')
   async changelog(): Promise<string> {
-    if (this.configService.getOrThrow('NODE_ENV') !== 'development') {
+    if (this.configService.getOrThrow('NODE_ENV') === 'production') {
       throw new AppException(GLOBAL_ERRORS.CHANGELOG_NOT_FOUND);
     }
 

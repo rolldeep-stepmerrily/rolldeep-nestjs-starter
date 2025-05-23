@@ -1,6 +1,6 @@
 {
-  "name": "rolldeep-nestjs-starter",
-  "version": "1.0.5",
+  "name": "fixme",
+  "version": "1.0.6",
   "description": "",
   "author": "",
   "private": true,
@@ -25,6 +25,7 @@
     "@nestjs/platform-express": "^10.4.1",
     "@nestjs/swagger": "^7.4.0",
     "@prisma/client": "^5.21.1",
+    "@scalar/nestjs-api-reference": "^0.5.1",
     "bcrypt": "^5.1.1",
     "cache-manager": "^5.7.6",
     "cache-manager-redis-yet": "^5.1.4",

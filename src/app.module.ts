@@ -12,13 +12,11 @@ import { PrismaModule } from './common/prisma';
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         SERVER_URL: Joi.string().required(),
-        NODE_ENV: Joi.string().valid('development', 'production').default('development'),
+        NODE_ENV: Joi.string().valid('local', 'development', 'production').default('development'),
         PORT: Joi.number().default(3000),
         DATABASE_URL: Joi.string().required(),
         ADMIN_NAME: Joi.string().required(),
         ADMIN_PASSWORD: Joi.string().required(),
-        GUEST_NAME: Joi.string().required(),
-        GUEST_PASSWORD: Joi.string().required(),
       }),
       isGlobal: true,
       envFilePath: '.env',
