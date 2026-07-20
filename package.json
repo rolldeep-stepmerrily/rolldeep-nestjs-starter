@@ -70,14 +70,6 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@nestjs/core",
-      "@prisma/engines",
-      "bcrypt",
-      "prisma"
-    ]
-  },
   "jest": {
     "moduleFileExtensions": [
       "js",

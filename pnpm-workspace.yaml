@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@prisma/engines'
+  - bcrypt
+  - prisma
+minimumReleaseAge: 0
