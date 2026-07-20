@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@prisma/engines'
+  - bcrypt
+  - prisma
+ignoredBuiltDependencies:
+  - '@scarf/scarf'
+minimumReleaseAge: 0
