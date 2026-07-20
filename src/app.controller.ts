@@ -1,11 +1,9 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-
+import { AppException, GLOBAL_ERRORS } from '@@exceptions';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { Controller, Get } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiExcludeController } from '@nestjs/swagger';
-
-import { AppException, GLOBAL_ERRORS } from '@@exceptions';
 
 @ApiExcludeController()
 @Controller()

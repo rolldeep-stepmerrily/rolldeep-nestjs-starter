@@ -1,19 +1,18 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
-
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 interface IErrorResponse {
   message: string;
   errorCode?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception: HttpException, host: ArgumentsHost): Response {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest();
+    const request = ctx.getRequest<Request>();
     const statusCode = exception.getStatus();
     const exceptionResponse = exception.getResponse();
 
@@ -23,19 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const isUnAuthorized = statusCode === HttpStatus.UNAUTHORIZED;
     const isBadRequest = statusCode === HttpStatus.BAD_REQUEST;
 
-    let errorCode;
-
-    if (error.errorCode) {
-      errorCode = error.errorCode;
-    } else {
-      if (isUnAuthorized) {
-        errorCode = 'UNAUTHORIZED_KEY';
-      } else if (isBadRequest) {
-        errorCode = 'INVALID_REQUEST';
-      } else {
-        errorCode = 'UNDEFINED_ERROR_CODE';
-      }
-    }
+    const errorCode = this.resolveErrorCode(error.errorCode, isUnAuthorized, isBadRequest);
 
     const message = isUnAuthorized ? 'Unauthorized key' : error.message || 'UNDEFINED_ERROR_MESSAGE';
 
@@ -46,5 +33,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: request.url,
     });
+  }
+
+  private resolveErrorCode(existing: string | undefined, isUnAuthorized: boolean, isBadRequest: boolean): string {
+    if (existing) {
+      return existing;
+    }
+
+    if (isUnAuthorized) {
+      return 'UNAUTHORIZED_KEY';
+    }
+
+    if (isBadRequest) {
+      return 'INVALID_REQUEST';
+    }
+
+    return 'UNDEFINED_ERROR_CODE';
   }
 }

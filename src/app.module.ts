@@ -1,11 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-
 import Joi from 'joi';
 
 import { AppController } from './app.controller';
+import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
+import { RedisModule } from './common/redis';
 
 @Module({
   imports: [
@@ -15,6 +16,9 @@ import { PrismaModule } from './common/prisma';
         NODE_ENV: Joi.string().valid('local', 'development', 'production').default('development'),
         PORT: Joi.number().default(3000),
         DATABASE_URL: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().default(6379),
+        REDIS_PASSWORD: Joi.string().optional().allow(''),
         ADMIN_NAME: Joi.string().required(),
         ADMIN_PASSWORD: Joi.string().required(),
       }),
@@ -22,12 +26,14 @@ import { PrismaModule } from './common/prisma';
       envFilePath: '.env',
       validationOptions: { abortEarly: true },
     }),
+    GlobalCqrsModule,
     PrismaModule,
+    RedisModule,
   ],
   controllers: [AppController],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(HttpLoggerMiddleware).forRoutes('*');
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(HttpLoggerMiddleware).forRoutes('{*splat}');
   }
 }

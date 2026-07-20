@@ -3,6 +3,12 @@
 /node_modules
 /build
 
+# Prisma generated client
+/src/generated
+
+# Claude Code local settings
+.claude/settings.local.json
+
 # Logs
 logs
 *.log
