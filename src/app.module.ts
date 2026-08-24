@@ -2,7 +2,6 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 
-import { AppController } from './app.controller';
 import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
@@ -30,7 +29,6 @@ import { RedisModule } from './common/redis';
     PrismaModule,
     RedisModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

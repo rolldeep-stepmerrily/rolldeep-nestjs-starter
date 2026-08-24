@@ -1,11 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
 export const GLOBAL_ERRORS = {
-  CHANGELOG_NOT_FOUND: {
-    statusCode: HttpStatus.NOT_FOUND,
-    errorCode: 'CHANGELOG_NOT_FOUND',
-    message: 'Cannot GET /changelog',
-  },
   INVALID_POSITIVE_INT: {
     statusCode: HttpStatus.BAD_REQUEST,
     errorCode: 'INVALID_POSITIVE_INT',
