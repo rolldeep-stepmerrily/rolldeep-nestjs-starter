@@ -6,6 +6,7 @@ import { GlobalCqrsModule } from './common/cqrs';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { PrismaModule } from './common/prisma';
 import { RedisModule } from './common/redis';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RedisModule } from './common/redis';
     GlobalCqrsModule,
     PrismaModule,
     RedisModule,
+    UsersModule,
   ],
 })
 export class AppModule implements NestModule {
