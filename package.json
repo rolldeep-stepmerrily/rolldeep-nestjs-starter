@@ -1,11 +1,14 @@
 {
   "name": "fixme",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "prisma generate && nest build",
     "start:dev": "prisma generate && nest start --watch",
@@ -42,7 +45,6 @@
     "express-basic-auth": "^1.2.1",
     "helmet": "^8.0.0",
     "ioredis": "^5.4.1",
-    "joi": "^17.13.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.0",
@@ -88,6 +90,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
+      "^@@config$": "<rootDir>/common/config/index",
       "^@@decorators$": "<rootDir>/common/decorators/index",
       "^@@entities$": "<rootDir>/common/entities/index",
       "^@@exceptions$": "<rootDir>/common/exceptions/index",
@@ -96,6 +99,7 @@
       "^@@cqrs$": "<rootDir>/common/cqrs/index",
       "^@@redis$": "<rootDir>/common/redis/index",
       "^@@db$": "<rootDir>/common/prisma/index",
+      "^@@types$": "<rootDir>/common/types/index",
       "^src/(.*)$": "<rootDir>/$1"
     }
   }

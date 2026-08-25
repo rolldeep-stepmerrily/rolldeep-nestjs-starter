@@ -1,6 +1,6 @@
 import { BaseEntity } from '@@entities';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNumber } from 'class-validator';
+import { IsEmail, IsNumber, IsString } from 'class-validator';
 
 export class UserEntity extends BaseEntity {
   @ApiProperty({
@@ -8,6 +8,12 @@ export class UserEntity extends BaseEntity {
   })
   @IsNumber()
   id!: number;
+
+  @ApiProperty({
+    description: '아이디',
+  })
+  @IsString()
+  loginId!: string;
 
   @ApiProperty({
     description: '이메일',

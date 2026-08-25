@@ -1,5 +1,5 @@
+import { AppConfig } from '@@config';
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NextFunction, Request, Response } from 'express';
 
 interface IRequest extends Request {
@@ -10,12 +10,12 @@ interface IRequest extends Request {
 export class HttpLoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly appConfig: AppConfig) {}
 
   use(req: IRequest, res: Response, next: NextFunction): void {
     const startTime = Date.now();
 
-    if (['local', 'development'].includes(this.configService.getOrThrow('NODE_ENV'))) {
+    if (['local', 'development'].includes(this.appConfig.nodeEnv)) {
       // biome-ignore lint/suspicious/noConsole: 개발 환경에서 요청 바디 로깅
       console.log(req.body);
     }

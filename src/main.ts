@@ -2,7 +2,6 @@ import * as fs from 'node:fs';
 import { join } from 'node:path';
 
 import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,15 +10,16 @@ import express from 'express';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
+import { AppConfig } from './common/config';
 import { HttpExceptionFilter } from './common/filters';
 import { TransformInterceptor } from './common/interceptors';
 
 const bootstrap = async (): Promise<void> => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  const configService = app.get(ConfigService);
+  const appConfig = app.get(AppConfig);
 
-  const nodeEnv = configService.getOrThrow<string>('NODE_ENV');
+  const nodeEnv = appConfig.nodeEnv;
   const isProduction = nodeEnv === 'production';
 
   app.useGlobalInterceptors(new TransformInterceptor());
@@ -35,8 +35,8 @@ const bootstrap = async (): Promise<void> => {
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  const port = configService.getOrThrow<number>('PORT');
-  const serverUrl = configService.getOrThrow<string>('SERVER_URL');
+  const port = appConfig.port;
+  const serverUrl = appConfig.serverUrl;
 
   if (isProduction) {
     app.use(helmet());

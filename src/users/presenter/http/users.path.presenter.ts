@@ -3,5 +3,6 @@ export const UsersRouter = {
   HttpApiTags: 'Users',
   Http: {
     GetUsers: '/',
+    CreateUser: '/',
   },
 } as const;

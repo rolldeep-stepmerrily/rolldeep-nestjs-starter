@@ -1,8 +1,8 @@
 import { TypedQueryBus } from '@@cqrs';
 import { Injectable } from '@nestjs/common';
-import { GetUsersQuery } from 'src/users/application/queries/get-users.query';
+import { GetUsersQuery, PaginatedUsers } from 'src/users/application/queries/get-users.query';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { GetUsersResponseDto } from 'src/users/presenter/http/dto/get-users.dto';
+import { GetUsersMetaDto, GetUsersResponseDto } from 'src/users/presenter/http/dto/get-users.dto';
 
 @Injectable()
 export class GetUsersUseCase {
@@ -11,25 +11,29 @@ export class GetUsersUseCase {
   /**
    * 유저 목록 조회
    *
-   * @param {GetUsersUseCaseProps} props 조회 조건
-   * @returns {Promise<GetUsersResponseDto[]>} 유저 목록 응답
+   * @param {GetUsersUseCaseProps} props 조회 조건 (페이지, 페이지당 개수)
+   * @returns {Promise<GetUsersUseCaseResult>} 유저 목록 응답과 페이지네이션 메타 정보
    */
-  async execute(props: GetUsersUseCaseProps): Promise<GetUsersResponseDto[]> {
-    const { limit } = props;
+  async execute(props: GetUsersUseCaseProps): Promise<GetUsersUseCaseResult> {
+    const { page, limit } = props;
 
-    const users = await this.getUsers(limit);
+    const { items, total } = await this.getUsers(page, limit);
 
-    return this.buildResponseDto(users);
+    return {
+      users: this.buildResponseDto(items),
+      meta: GetUsersMetaDto.from(total, page, limit),
+    };
   }
 
   /**
    * 유저 목록 조회
    *
-   * @param {number} limit 조회 개수
-   * @returns {Promise<UserEntity[]>} 유저 엔티티 목록
+   * @param {number} page 페이지 번호
+   * @param {number} limit 페이지당 조회 개수
+   * @returns {Promise<PaginatedUsers>} 유저 엔티티 목록과 전체 개수
    */
-  private async getUsers(limit: number): Promise<UserEntity[]> {
-    return await this.queryBus.execute(new GetUsersQuery({ limit }));
+  private async getUsers(page: number, limit: number): Promise<PaginatedUsers> {
+    return await this.queryBus.execute(new GetUsersQuery({ page, limit }));
   }
 
   /**
@@ -44,5 +48,11 @@ export class GetUsersUseCase {
 }
 
 interface GetUsersUseCaseProps {
+  page: number;
   limit: number;
+}
+
+interface GetUsersUseCaseResult {
+  users: GetUsersResponseDto[];
+  meta: GetUsersMetaDto;
 }
