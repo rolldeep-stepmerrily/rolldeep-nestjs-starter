@@ -39,7 +39,7 @@
     "@scalar/nestjs-api-reference": "^0.5.1",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
+    "class-validator": "^0.15.1",
     "dayjs": "^1.11.13",
     "express": "^5.0.0",
     "express-basic-auth": "^1.2.1",
