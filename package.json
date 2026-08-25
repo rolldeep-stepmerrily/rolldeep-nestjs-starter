@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.30.3",
   "engines": {
-    "node": ">=22"
+    "node": ">=26"
   },
   "scripts": {
     "build": "prisma generate && nest build",
