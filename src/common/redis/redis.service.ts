@@ -1,5 +1,5 @@
+import { RedisConfig } from '@@config';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { isDefined } from 'class-validator';
 import Redis from 'ioredis';
 
@@ -7,17 +7,17 @@ import Redis from 'ioredis';
 export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client!: Redis;
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly redisConfig: RedisConfig) {}
 
   /**
    * 모듈 초기화 시 Redis 클라이언트를 생성
    */
   onModuleInit(): void {
-    const password = this.configService.get<string>('REDIS_PASSWORD');
+    const { host, port, password } = this.redisConfig;
 
     this.client = new Redis({
-      host: this.configService.getOrThrow<string>('REDIS_HOST'),
-      port: this.configService.getOrThrow<number>('REDIS_PORT'),
+      host,
+      port,
       ...(isDefined(password) && { password }),
       lazyConnect: true,
     });
