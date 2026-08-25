@@ -1,26 +1,25 @@
-import * as fs from 'fs';
-import { join } from 'path';
+import * as fs from 'node:fs';
+import { join } from 'node:path';
 
 import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
 import { apiReference } from '@scalar/nestjs-api-reference';
-import * as express from 'express';
+import express from 'express';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
+import { AppConfig } from './common/config';
 import { HttpExceptionFilter } from './common/filters';
 import { TransformInterceptor } from './common/interceptors';
 
-async function bootstrap() {
+const bootstrap = async (): Promise<void> => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  const configService = app.get(ConfigService);
+  const appConfig = app.get(AppConfig);
 
-  const nodeEnv = configService.getOrThrow<string>('NODE_ENV');
+  const nodeEnv = appConfig.nodeEnv;
   const isProduction = nodeEnv === 'production';
 
   app.useGlobalInterceptors(new TransformInterceptor());
@@ -36,8 +35,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  const port = configService.getOrThrow<number>('PORT');
-  const serverUrl = configService.getOrThrow<string>('SERVER_URL');
+  const port = appConfig.port;
+  const serverUrl = appConfig.serverUrl;
 
   if (isProduction) {
     app.use(helmet());
@@ -66,7 +65,7 @@ async function bootstrap() {
     );
 
     const countEndPoint = Object.values(document.paths).reduce((acc, cur) => {
-      return (acc += Object.keys(cur).length);
+      return acc + Object.keys(cur).length;
     }, 0);
 
     const uptime = process.uptime().toFixed(2);
@@ -98,6 +97,7 @@ async function bootstrap() {
       const leftPadding = Math.floor((terminalWidth - maxLength) / 2);
       const separator = ' '.repeat(terminalWidth);
 
+      // biome-ignore lint/suspicious/noConsole: 개발 환경 부팅 배너
       console.log(
         style,
         `${separator}\n${messages.map((msg) => `${' '.repeat(leftPadding)}${msg}`).join('\n')}\n${separator}`,
@@ -106,5 +106,6 @@ async function bootstrap() {
   }
 
   await app.listen(port);
-}
+};
+
 bootstrap();

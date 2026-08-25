@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_ENV: test
+  SERVER_URL: http://localhost
+  PORT: 3000
+  ADMIN_NAME: ci
+  ADMIN_PASSWORD: ci1234!
+  DATABASE_URL: postgresql://local:local1234!@localhost:5432/localDB
+  REDIS_HOST: localhost
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: ''
+
+jobs:
+  lint-and-test:
+    name: lint-and-test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: local
+          POSTGRES_PASSWORD: local1234!
+          POSTGRES_DB: localDB
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U local"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
+      - name: Biome (format + lint + import sort)
+        run: pnpm exec biome ci .
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      - name: Build
+        run: pnpm exec nest build
+
+      - name: Push Prisma schema
+        run: pnpm exec prisma db push
+
+      - name: Test
+        run: pnpm exec jest --passWithNoTests
+
+      - name: Boot smoke test
+        run: |
+          node dist/main.js &
+          APP_PID=$!
+          trap "kill $APP_PID" EXIT
+
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:3000/users > /dev/null; then
+              echo "App booted and responded successfully"
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "App did not respond in time"
+          exit 1

@@ -1,6 +1,5 @@
+import { AppConfig } from '@@config';
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-
 import { NextFunction, Request, Response } from 'express';
 
 interface IRequest extends Request {
@@ -9,20 +8,21 @@ interface IRequest extends Request {
 
 @Injectable()
 export class HttpLoggerMiddleware implements NestMiddleware {
-  constructor(private readonly configService: ConfigService) {}
-
   private readonly logger = new Logger('HTTP');
 
-  use(req: IRequest, res: Response, next: NextFunction) {
+  constructor(private readonly appConfig: AppConfig) {}
+
+  use(req: IRequest, res: Response, next: NextFunction): void {
     const startTime = Date.now();
 
-    if (this.configService.getOrThrow('NODE_ENV') === 'development') {
+    if (['local', 'development'].includes(this.appConfig.nodeEnv)) {
+      // biome-ignore lint/suspicious/noConsole: 개발 환경에서 요청 바디 로깅
       console.log(req.body);
     }
 
     res.on('finish', () => {
-      const userIpV4 = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      const userIpV6 = req.ips.length ? req.ips[0] : req.ip;
+      const userIpV4 = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+      const userIpV6 = req.ips.length > 0 ? req.ips[0] : (req.ip ?? 'unknown');
       const userId = req.user?.id ? ` ${req.user?.id} ` : ' ';
       const contentLength = res.getHeader('content-length') || 0;
       const referrer = req.header('Referer') || req.header('Referrer');

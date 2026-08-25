@@ -6,12 +6,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+    "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
@@ -20,10 +21,16 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
+      "@@config": ["src/common/config/index"],
       "@@decorators": ["src/common/decorators/index"],
       "@@entities": ["src/common/entities/index"],
       "@@exceptions": ["src/common/exceptions/index"],
-      "@@pipes": ["src/common/pipes/index"]
+      "@@pipes": ["src/common/pipes/index"],
+      "@@prisma": ["src/generated/prisma/client"],
+      "@@cqrs": ["src/common/cqrs/index"],
+      "@@redis": ["src/common/redis/index"],
+      "@@db": ["src/common/prisma/index"],
+      "@@types": ["src/common/types/index"]
     }
   }
 }
