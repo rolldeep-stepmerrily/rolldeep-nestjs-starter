@@ -59,7 +59,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.4.0",
     "@types/passport-jwt": "^4.0.1",
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
